@@ -10,8 +10,14 @@ python = "~3.11"
 dddmisc-messagebus = "^0.7.0"
 dddmisc-domain = "^0.6.0"
 pydantic = "^2.9.1"
+pytest = "^8.3.3"
+pytest-asyncio = "^0.24.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

@@ -6,14 +6,17 @@ from .entities import User, UserInfo
 
 class UserAggr:
     _mail_adapter: AbstractMailAdapter
+    _verification_base_url: str
     _user: User
 
     @classmethod
     def bootstrap(
             cls,
             mail_adapter: AbstractMailAdapter,
+            verification_base_url: str,
     ):
         cls._mail_adapter = mail_adapter
+        cls._verification_base_url = verification_base_url
 
     @property
     def reference(self) -> UUID:
@@ -30,19 +33,19 @@ class UserAggr:
                      user_info=UserInfo())
         obj = cls()
         obj._user = _user
-        obj._user.create_event(
-            "UserCreated",
-            user_reference=obj._user.__reference__
-        )
+
         return obj
 
     @classmethod
-    def restore(cls) -> "UserAggr":
-        ...
+    def restore(cls, user: User) -> "UserAggr":
+        obj = cls()
+        obj._user = user
+        return obj
 
     async def send_verify_email(self):
-        _subject = "Подтверждение регистрации"
-        _body = """
-        Some body with verify url
+        code = self._user.generate_verification_code()
+        subject = "Подтверждение регистрации"
+        body = f"""
+        Verification link: https://{self._verification_base_url}/verify_mail?user={self._user.__reference__}&code={code}
         """
-        await self._mail_adapter.send_email(self._user.email, _subject, _body)
+        await self._mail_adapter.send_email(self._user.email, subject, body)
