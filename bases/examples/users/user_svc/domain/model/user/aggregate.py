@@ -46,6 +46,7 @@ class UserAggr:
         code = self._user.generate_verification_code()
         subject = "Подтверждение регистрации"
         body = f"""
-        Verification link: https://{self._verification_base_url}/verify_mail?user={self._user.__reference__}&code={code}
+        Verification link: 
+        https://{self._verification_base_url}/verify_mail?user={self._user.__reference__}&code={code}
         """
         await self._mail_adapter.send_email(self._user.email, subject, body)
