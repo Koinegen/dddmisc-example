@@ -17,3 +17,8 @@ class CreateUserCommand(BaseUserCommand):
 
 class SendVerificationCodeCommand(BaseUserCommand):
     user_reference: UUID
+
+
+class VerifyUserCommand(BaseUserCommand):
+    user_reference: UUID
+    code: UUID
