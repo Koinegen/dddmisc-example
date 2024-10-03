@@ -33,6 +33,10 @@ class UserAggr:
                      user_info=UserInfo())
         obj = cls()
         obj._user = _user
+        obj._user.create_event(
+            'UserCreated',
+            user_reference=_user.__reference__
+        )
 
         return obj
 

@@ -9,5 +9,9 @@ class BaseUserEvent(DomainEvent, domain=__domain_name__):
     pass
 
 
+class UserCreated(BaseUserEvent):
+    user_reference: UUID
+
+
 class UserCreatedAndVerified(BaseUserEvent):
     user_reference: UUID

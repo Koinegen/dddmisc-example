@@ -37,7 +37,18 @@ async def create_user(
     return user_aggr.reference
 
 
-@user_collection.subscribe('user.service.UserCreatedAndVerified')
+@user_collection.register
+async def verify_user(
+        command: cmd.VerifyUserCommand,
+        uow_builder: UnitOfWorkBuilder[AbstractUserRepository],
+):
+    async with uow_builder() as uow:
+        user_aggr = await uow.repository.get_user(user_reference=command.user_reference)
+        await user_aggr.send_verify_email()
+        await uow.apply()
+
+
+@user_collection.subscribe('user.service.UserCreated')
 @user_collection.register
 async def send_verification_code(
         command: cmd.SendVerificationCodeCommand,
